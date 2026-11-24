@@ -44,6 +44,10 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+// No em-dash here on purpose: the commas carry the vow's cadence, and
+// the line's three beats (take / hold through conditions / until the end)
+// mirror the original vow's rhythm, so the laugh lands on the final
+// clause instead of trailing after a pause.
 const LINE =
   'I take you to be my lawfully wedded firmware, to have and to hold, in low battery and in airplane mode, until a factory reset do us part.';
 
