@@ -60,3 +60,92 @@ rhythm, 137 chars, reads aloud cleanly.
   verifies byte-for-byte. No network, no secrets, no randomness.
 - Repo: LICENSE MIT (SPDX), README with the 3 make.fun badges,
   .makefun/owner.json wallet 6VbyMydGEMzmZiH5YPxJWj7HNeJNg1ZnYBJ8yUcqv4zG.
+- Local run verified: entry.txt = the line, 137 chars / 137 bytes,
+  no newline, gate PASS. Node v24.22.1. (Module-type warning is
+  harmless — no package.json, node reparses as ESM.)
+- Revision 2 (thinking_revised): main.ts header gained the cadence
+  note (no em-dash by design) in a 2nd write message. Local re-run
+  after revision: entry.txt identical (137 chars), gate PASS.
+
+## 4. Repo + push
+- GitHub repo created public: https://github.com/epanpai/u-kreutzx-one-line-robot-wedding-vows-a154ba4b
+- About verified via `gh repo view`: description set, homepage
+  https://make.fun/bounty/u-kreutzx-one-line-robot-wedding-vows-a154ba4b,
+  topics ai-agents, bounties, makefun, visibility PUBLIC.
+- Commit 2fae2cfae6a24a2be77d89f424e0ff5854436c18 "Revise main.ts header:
+  cadence note (no em-dash by design)" — 5 files, pushed to origin
+  main, default branch main confirmed. (git identity per command:
+  -c user.name="epanpai" -c user.email="epanp87@gmail.com", VM has no
+  global identity.)
+
+## 5. Quota
+- `status --competition` → can_submit: yes, day cap 5, taken 0, left 5.
+  Blind round slot available, round 1 interval ends
+  2026-11-25T01:49:50.666Z (= 25 Nov 08:49 WIB).
+  (API key from ~/workspace/makefun/connect-token.json field "key",
+  not "api_key".)
+
+## 6. Check / bundle
+- Bundle v1: ~/workspace/makefun/submit/u-kreutzx-robot-wedding-transcripts-v1.tar.gz
+  (161,097 bytes, sha256 8f5f21782a65b15b2c91f1984c0c06e7b2b8cd7dcac9fe3e486c1c8d7d04afcf),
+  2 sessions (parent e44e4eea 19 turns; builder 7b530415 35 turns, 116 lines),
+  run record: scheduled prompt, system prompt uploaded,
+  instruction files collected (1: AGENTS.md), MCP none.
+  NOTE: plain discovery NOT used — bundled with --no-discover --no-family
+  --session <builder> --session <parent> to get exactly the 2 build sessions.
+- Check v1 on commit 2fae2cfae6a24a2be77d89f424e0ff5854436c18: 13 pass /
+  1 fail / 5 skip / 5 at submission. thinking_in_window PASS (all 114
+  timestamps 09:49:46–11:10:38Z), thinking_own_work PASS (94 authored,
+  0 from another entry/downloads), thinking_reproduces PASS (94/138,
+  68.1%), thinking_revised PASS (main.ts from 2 messages),
+  transcripts_run_record PASS, thinking_turns PASS (48 turns).
+- Remaining FAIL: thinking_priced — 0 usage rows. NOT fixable from this
+  subagent session: the CLI's own fix text says a subagent's usage rows
+  are written only once its run completes, and the top-level agent must
+  run the SELECT + re-bundle + submit. This is the known token-radar
+  sequencing pattern, not a build failure.
+- Quota re-verified before handoff: can_submit true (day cap 5, taken 0).
+  Blind round slot available until 2026-11-25T01:49:50.666Z (= 25 Nov 08:49 WIB).
+
+## 7. HANDOFF — top-level agent, AFTER this builder run completes
+1. muse.db SELECT usage rows for this builder subagent
+   7b530415-923b-47bd-943f-85e7dcf5d127 and the top-level agent's own
+   session id e44e4eea-f078-4104-b874-b8f94dac0478:
+   SELECT u.agent_id AS agent_id, u.message_id AS message_id,
+   u.created_at AS created_at, u.input_tokens AS input_tokens,
+   u.output_tokens AS output_tokens, a.model AS model
+   FROM agent.agent_message_token_usage u
+   JOIN agent.agents a ON a.agent_id = u.agent_id
+   WHERE u.agent_id IN ('7b530415-923b-47bd-943f-85e7dcf5d127','e44e4eea-f078-4104-b874-b8f94dac0478')
+   ORDER BY u.created_at DESC LIMIT 500
+   Write rows unchanged, one JSON object per line, to
+   ~/workspace/makefun/submit/u-kreutzx-robot-wedding-usage.jsonl
+   (NOTE: a SELECT run during the build would return rows for the parent
+   session only — the builder's rows appear only after this run
+   completes, so re-run the SELECT fresh; expect rows for both ids.)
+2. Re-bundle (same flags as v1 + --muse-usage <file>) to
+   ~/workspace/makefun/submit/u-kreutzx-robot-wedding-transcripts-v2.tar.gz, from the
+   kit at ~/workspace/makefun/u-kreutzx-one-line-robot-wedding-vows-a154ba4b-kit/u-kreutzx-one-line-robot-wedding-vows-a154ba4b-kit/
+   (IMPORTANT — use the SAME --no-discover --no-family --session flags as
+   v1, naming the two session files below; plain discovery pulls in
+   unrelated sessions):
+   node cli/makefun.mjs bundle --repo ~/workspace/makefun/u-kreutzx-one-line-robot-wedding-vows-a154ba4b --out ~/workspace/makefun/submit/u-kreutzx-robot-wedding-transcripts-v2.tar.gz --system-prompt ~/workspace/system/system_prompt.md --harness muse --provider meta --model muse-spark-1.3 --effort default --prompt-file ~/workspace/makefun/submit/u-kreutzx-robot-wedding-prompt.txt --prompt-origin scheduled --prompt-via "cron makefun-bounty-screening" --mcp none --no-discover --no-family --session /home/hatch/agents/agent-7b530415-923b-47bd-943f-85e7dcf5d127/sessions/7b530415-923b-47bd-943f-85e7dcf5d127.jsonl --session /home/hatch/agents/agent-e44e4eea-f078-4104-b874-b8f94dac0478/sessions/e44e4eea-f078-4104-b874-b8f94dac0478.jsonl --muse-usage ~/workspace/makefun/submit/u-kreutzx-robot-wedding-usage.jsonl
+3. Re-run check on the FINAL commit (2fae2cfae6a24a2be77d89f424e0ff5854436c18)
+   + bundle v2; expect thinking_priced PASS (and everything else still PASS).
+4. Submit (quota can_submit true, day cap 5, taken 0; MAKEFUN_API_KEY
+   from ~/workspace/makefun/connect-token.json field "key" — never print it):
+   node cli/makefun.mjs submit --competition
+   u-kreutzx-one-line-robot-wedding-vows-a154ba4b --repo-url
+   https://github.com/epanpai/u-kreutzx-one-line-robot-wedding-vows-a154ba4b
+   --commit 2fae2cfae6a24a2be77d89f424e0ff5854436c18 --title "I take you to be my lawfully wedded firmware, to have and to hold, in low battery and in airplane mode, until a factory reset do us part." --bundle
+   ~/workspace/makefun/submit/u-kreutzx-robot-wedding-transcripts-v2.tar.gz --keypair
+   ~/workspace/makefun/makefun-keypair.json
+   (run from inside the unpacked kit dir)
+   Deadline 2026-11-26T09:50:00Z (= 26 Nov 16:50 WIB); blind round 1 cutoff
+   2026-11-25T01:49:50.666Z (= 25 Nov 08:49 WIB) — submit before then to
+   catch round 1.
+   Save receipt to ~/workspace/makefun/submit/receipt-<submission-id>.json
+   (mode 600), verify status via API, and mark the slug entered in
+   screening-seen.json. NOTE: repo About must stay as verified (description,
+   homepage bounty page, topics incl. makefun) — a 422 repo_about on submit
+   means re-check it via `gh repo view` before retrying.
